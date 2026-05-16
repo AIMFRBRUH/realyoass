@@ -41,13 +41,8 @@ class FbsDumperCLI:
         print("Executing command:", " ".join(command))
         
         try:
-            result = subprocess.run(
-                command, check=True, capture_output=True, text=True)
-            print("FbsDumper output:")
-            print(result.stdout)
-            if result.stderr:
-                print("FbsDumper errors:")
-                print(result.stderr)
+            subprocess.run(
+                command, check=True)
             print(f"Successfully dumped to: {full_output_file_path}")
         except subprocess.CalledProcessError as e:
             print(f"Error executing FbsDumper (exit code {e.returncode}):")
