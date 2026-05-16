@@ -42,10 +42,44 @@ class Il2CppInspectorDumperCLI:
         print("Executing command:", " ".join(command))
         
         try:
-            subprocess.run(
-                command, check=True, cwd=output_base_directory)
+            import time
+            process = subprocess.Popen(
+                command, 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.STDOUT, 
+                text=True, 
+                encoding='utf-8', 
+                errors='replace', 
+                cwd=output_base_directory,
+                stdin=subprocess.DEVNULL
+            )
 
-            print("\nIl2CppInspectorRedux dumping process completed successfully.")
+            finished = False
+            while True:
+                line = process.stdout.readline()
+                if not line:
+                    break
+                print(line, end="", flush=True)
+                if "Export finished" in line:
+                    finished = True
+                    # Give it a bit to exit on its own
+                    break
+            
+            if finished:
+                try:
+                    # Wait up to 10 seconds for it to close naturally
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    print("\nIl2CppInspectorRedux hanging after export. Terminating process...")
+                    process.terminate()
+                    process.wait()
+            else:
+                process.wait()
+
+            if process.returncode != 0 and not finished:
+                print(f"\nError: Il2CppInspectorRedux exited with code {process.returncode}")
+            else:
+                print("\nIl2CppInspectorRedux dumping process completed successfully.")
         except FileNotFoundError:
             print(f"Error: Il2CppInspectorRedux executable or one of the specified input files was not found.")
             print(f"Please double-check paths: {self.executable_path}, {self.library_file}, {self.global_metadata}")
