@@ -42,16 +42,8 @@ class Il2CppInspectorDumperCLI:
         print("Executing command:", " ".join(command))
         
         try:
-            result = subprocess.run(
-                command, check=True, capture_output=True, text=True, 
-                encoding='utf-8', errors='replace', cwd=output_base_directory)
-
-            print("\nIl2CppInspectorRedux output (stdout):")
-            print(result.stdout)
-            
-            if result.stderr:
-                print("\nIl2CppInspectorRedux errors (stderr):")
-                print(result.stderr)
+            subprocess.run(
+                command, check=True, cwd=output_base_directory)
 
             print("\nIl2CppInspectorRedux dumping process completed successfully.")
         except FileNotFoundError:
