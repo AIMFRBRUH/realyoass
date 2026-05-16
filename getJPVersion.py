@@ -16,12 +16,11 @@ if __name__ == "__main__":
         "--sql-cipher-url",
         required=False,
         default=None,
-        nargs='?',
         help="SQL Cipher Key URL (default: None)",
     )
     args = parser.parse_args()
     sql_cipher_url = args.sql_cipher_url
-    if sql_cipher_url == "":
+    if sql_cipher_url is not None and not sql_cipher_url.strip():
         sql_cipher_url = None
     
     os_system = platform.system()
@@ -79,7 +78,7 @@ if __name__ == "__main__":
         manifest = json.load(f)
 
     try:
-        response = requests.get(config_url)
+        response = requests.get(config_url, timeout=30)
         response.raise_for_status()
         config_data_res = response.json()
 
