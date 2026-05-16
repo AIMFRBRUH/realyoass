@@ -6,7 +6,7 @@ import hashlib
 def get_sql_cipher_key(fetch_url: str, gateway_url: str, bundle_version: str):
     """
     Retrieves the SQL Cipher key.
-    Uses the 'Bundle Only' recipe: SHA256(Salt + BundleVersion)
+    Attempting the 'Pure' recipe: SHA256(BundleVersion)
     """
     
     # 1. Try Remote Fetch (if secret is provided)
@@ -20,16 +20,13 @@ def get_sql_cipher_key(fetch_url: str, gateway_url: str, bundle_version: str):
         except Exception:
             pass
 
-    # 2. Local "Raw Key" Generation (Most common BA JP method)
+    # 2. Local "Raw Key" Generation (Pure Version)
     try:
         if not bundle_version:
             return None
 
-        # Many BA tools use Salt + BundleVersion (or vice-versa)
-        salt = "BlueArchive" 
-        
-        # We'll try Salt + BundleVersion as it's the most standard 'recipe'
-        seed = f"{salt}{bundle_version}".encode('utf-8')
+        # Just the bundle version, no salts.
+        seed = bundle_version.encode('utf-8')
         raw_hex = hashlib.sha256(seed).hexdigest()
         
         # Return as Raw Hex Key
