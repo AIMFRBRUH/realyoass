@@ -42,7 +42,7 @@ class FbsDumperCLI:
         
         try:
             subprocess.run(
-                command, check=True)
+                command, check=True, stdin=subprocess.DEVNULL)
             print(f"Successfully dumped to: {full_output_file_path}")
         except subprocess.CalledProcessError as e:
             print(f"Error executing FbsDumper (exit code {e.returncode}):")
