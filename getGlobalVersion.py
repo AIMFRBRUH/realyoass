@@ -59,7 +59,7 @@ if __name__ == "__main__":
     
     # Request the data from config and save to the disk
     try:
-        response = requests.get(config_data['patch']['resource_path'])
+        response = requests.get(config_data['patch']['resource_path'], timeout=30)
         response.raise_for_status()
         resources_data = response.json()
 
