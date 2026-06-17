@@ -1,2 +1,0 @@
-regex:GameAssembly\.dll
-regex:.*global-metadata\.dat

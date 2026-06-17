@@ -1,6 +1,0 @@
-cloudscraper
-pycryptodome
-requests
-requests-cache
-xxhash>=3.5.0
-tqdm
